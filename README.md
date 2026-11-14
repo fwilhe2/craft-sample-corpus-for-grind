@@ -1,25 +1,24 @@
 # Grind Office compatibility corpus
 
-Build realistic, explicitly fictional Word and Excel files with WordCraft and GridCraft, then import them through Grind into ODT/ODS. Grind's JSON conversion reports are saved beside each imported file so unsupported Office constructs are visible.
+Build fictional Word and Excel compatibility files with WordCraft and GridCraft, import them through Grind into ODT/ODS, and save Grind's JSON conversion reports beside each imported file. The container installs pinned, checksum-verified WordCraft and GridCraft packages and builds Grind, so no local Craft CLI installation is needed.
 
 ```sh
-bash scripts/create_samples.sh
+docker build -t grind-sample-corpus .
+docker run --rm -v "$PWD/samples:/workspace/samples" grind-sample-corpus
 ```
 
-By default, this writes to `samples/compatibility/`. Set `GRIND_BIN` if Grind is not at the development-build path, or pass an output directory as the first argument:
+The corpus is written to `samples/compatibility/`. To write elsewhere, pass the output directory after the image name:
 
 ```sh
-GRIND_BIN=/path/to/grind bash scripts/create_samples.sh /tmp/office-compatibility
+docker run --rm -v "$PWD/output:/output" grind-sample-corpus /output
 ```
 
-The corpus includes an operations memo, service proposal, vendor invoice, quarterly review, annual operating budget, sales ledger, inventory plan, and project portfolio. Names, contacts, account details, dates, and figures are fabricated; `.test` email addresses and `FICTIONAL TEST DATA` labels make that explicit. The files cover headings, tables, lists, footnotes, hyperlinks, tracked changes and comments, multi-page layout, formulas, dates, multiple sheets, filters, charts, validation, conditional formatting, and defined names.
-
-Requirements: `wordcraft-cli`, `gridcraft-cli`, and a Grind build with DOCX/XLSX import enabled. The script overwrites its generated files on each run. Compatibility reports may show intentional losses, especially for spreadsheet charts and validation; those are test results, not generation failures.
+The generator can also run directly with `wordcraft-cli`, `gridcraft-cli`, and a Grind build with DOCX/XLSX import enabled:
 
 ```sh
-grind info samples/compatibility/imported/docx/04-quarterly-review.odt
-grind info samples/compatibility/imported/xlsx/04-project-portfolio.ods
-cat samples/compatibility/reports/docx/04-quarterly-review.json
-cat samples/compatibility/reports/xlsx/04-project-portfolio.json
-gridcraft-cli check samples/compatibility/xlsx
+GRIND_BIN=/path/to/grind bash scripts/create_samples.sh
 ```
+
+The corpus includes fictional memos, proposals, invoices, reviews, and workbooks with headings, tables, lists, hyperlinks, tracked changes and comments, formulas, multiple sheets, filters, charts, validation, conditional formatting, and defined names. Names, contacts, dates, and figures are fabricated; `.test` email addresses and `FICTIONAL TEST DATA` labels make that explicit. Generated files are overwritten on each run.
+
+The GitHub Actions workflow builds the same image, generates and imports the corpus, and uploads `samples/compatibility/` as an artifact. Reports may record intentional conversion losses, especially for spreadsheet charts and validation.

@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 
 OUTPUT = Path(sys.argv[1] if len(sys.argv) > 1 else "samples/compatibility")
-GRIND = os.environ.get("GRIND_BIN", "/home/florian/code/github.com/fwilhe2/grind/target/debug/grind")
+GRIND = os.environ.get("GRIND_BIN", "grind")
 WORDCRAFT = shutil.which("wordcraft-cli")
 GRIDCRAFT = shutil.which("gridcraft-cli")
 os.environ.setdefault("WORDCRAFT_REGION", "en-US")
@@ -323,4 +323,4 @@ def import_with_grind(kind, extension, verb, output_extension):
 
 import_with_grind("docx", "docx", ["text", "import"], "odt")
 import_with_grind("xlsx", "xlsx", ["sheet", "import"], "ods")
-print(f"Created 4 DOCX, 4 XLSX, and Grind imports/reports in {OUTPUT}")
+print(f"Created 5 DOCX, 4 XLSX, and Grind imports/reports in {OUTPUT}")
